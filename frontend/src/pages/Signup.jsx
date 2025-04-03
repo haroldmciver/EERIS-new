@@ -40,6 +40,9 @@ const Signup = () => {
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography component="h1" variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
+          Welcome to the Employee Expense Reporting Information System!
+        </Typography>
         <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
           <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
             Sign Up

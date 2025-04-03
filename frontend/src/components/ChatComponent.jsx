@@ -160,11 +160,9 @@ const ChatComponent = () => {
               <Typography color="text.secondary" align="center" sx={{ width: '100%' }}>
                 Ask me questions about your receipts! For example:
                 <br />
-                "What was my highest expense this month?"
+                "What was my highest expense?"
                 <br />
-                "How much did I spend at restaurants?"
-                <br />
-                "Show me all my receipts from Amazon"
+                "How much did I spend on meals?"
               </Typography>
             </ListItem>
           ) : (
