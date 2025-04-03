@@ -17,7 +17,9 @@ source venv/bin/activate
 3. Install the dependencies
 
 ```
-cd backend
+cd frontend
+npm i
+cd ../backend
 pip install -r requirements.txt
 ```
 4. Add OpenAI API key to the backend
@@ -29,7 +31,12 @@ ask Harold for the OpenAI API key
 5. Run the application
 
 ```
-cd frontend
+cd backend
 python3 app.py
+```
+In a new terminal
+```
+cd ../frontend
+npm start
 ```
 
