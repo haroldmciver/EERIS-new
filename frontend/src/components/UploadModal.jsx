@@ -15,7 +15,24 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 
-const modalStyle = {
+// Small modal style for initial file upload
+const smallModalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '300px',
+  maxWidth: '90%',
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 3,
+  borderRadius: 2,
+  display: 'flex',
+  flexDirection: 'column',
+};
+
+// Larger modal style for displaying extracted information
+const largeModalStyle = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -111,15 +128,18 @@ const UploadModal = ({ open, onClose, onReceiptSaved }) => {
     onClose();
   };
 
+  // Determine which modal style to use based on whether we have receipt data
+  const modalStyle = receiptData ? largeModalStyle : smallModalStyle;
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={modalStyle}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h5" component="h2">
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" component="h2">
             Upload Receipt
           </Typography>
-          <IconButton onClick={handleClose}>
-            <CloseIcon />
+          <IconButton onClick={handleClose} size="small">
+            <CloseIcon fontSize="small" />
           </IconButton>
         </Box>
 
@@ -130,7 +150,13 @@ const UploadModal = ({ open, onClose, onReceiptSaved }) => {
         )}
 
         {!receiptData && (
-          <Box sx={{ mb: 3 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            mb: 2
+          }}>
             <input
               accept="image/*,.pdf"
               style={{ display: 'none' }}
@@ -139,13 +165,13 @@ const UploadModal = ({ open, onClose, onReceiptSaved }) => {
               onChange={handleFileChange}
             />
             <label htmlFor="receipt-file">
-              <Button variant="contained" component="span">
+              <Button variant="contained" component="span" sx={{ mb: 2 }}>
                 Choose File
               </Button>
             </label>
             {file && (
               <>
-                <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
+                <Typography variant="body2" sx={{ mt: 1, mb: 2, textAlign: 'center' }}>
                   Selected: {file.name}
                 </Typography>
                 <Button
@@ -162,13 +188,18 @@ const UploadModal = ({ open, onClose, onReceiptSaved }) => {
 
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-            <CircularProgress />
+            <CircularProgress size={24} />
           </Box>
         )}
 
         {receiptData && (
           <>
-            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
+              gap: 3,
+              overflow: 'auto'
+            }}>
               <Box>
                 <Typography variant="subtitle1" color="primary" sx={{ mb: 2 }}>
                   Store Information
@@ -271,7 +302,6 @@ const UploadModal = ({ open, onClose, onReceiptSaved }) => {
                   <ListItem key={index} sx={{ px: 0 }}>
                     <TextField
                       fullWidth
-                      size="small"
                       value={item}
                       onChange={(e) => handleLineItemChange(index, e.target.value)}
                       sx={{ mr: 2 }}

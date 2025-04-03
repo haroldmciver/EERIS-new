@@ -186,11 +186,12 @@
         ],
         "total_payment": "$9.54",
         "payment_method": "VISA CREDIT (Contactless)",
-        "expense_category": "office supplies",
+        "expense_category": "entertainment",
         "image_filename": "baf5561d-fe26-4a7b-a60c-f38dc990a3a9.pdf",
         "status": "approved",
         "processed_at": "2025-02-12T15:39:03.365263",
-        "username": "nathan"
+        "username": "nathan",
+        "id": "2025-02-12T15:39:03.365263"
       },
       {
         "store_name": "Pear Store",
@@ -208,7 +209,7 @@
         "payment_method": "VISA CREDIT (Contactless)",
         "expense_category": "office supplies",
         "image_filename": "ec4c28a7-cf91-4aab-8fd1-1e68fc9bf810.pdf",
-        "status": "submitted",
+        "status": "approved",
         "processed_at": "2025-02-25T20:49:15.417399"
       },
       {
@@ -225,8 +226,27 @@
         "payment_method": "Visa",
         "expense_category": "entertainment",
         "image_filename": "35b76381-e9f3-4b6b-88f4-9aa82aef0b74.png",
-        "status": "submitted",
+        "status": "approved",
         "processed_at": "2025-02-25T20:54:32.969716"
+      },
+      {
+        "address": "11800 W. Broad St. Ste. 1138, Richmond, VA 23233",
+        "date": "2024-06-02",
+        "expense_category": "office supplies",
+        "image_filename": "abd27565-74c1-447d-938c-373075c7a662.pdf",
+        "line_items": [
+          "EarPods (Lightning Connector)",
+          "EarPods (3.5mm Headphone Plug)",
+          "Lightning to 3.5 mm Headphone Jack Adapter"
+        ],
+        "payment_method": "VISA CREDIT (Contactless)",
+        "phone": "804-420-3000",
+        "store_name": "Apple Short Pump Town Center",
+        "time": "17:12",
+        "total_payment": "$9.54",
+        "website": "https://www.apple.com/retail/shortpump",
+        "processed_at": "2025-04-03T18:59:44.265699",
+        "status": "denied"
       }
     ],
     "supervisor": [
