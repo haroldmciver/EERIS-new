@@ -1,0 +1,21 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main circular outline -->
+  <circle cx="100" cy="100" r="90" fill="none" stroke="#00994c" stroke-width="4" />
+  
+  <!-- Receipt/Document icon -->
+  <rect x="60" y="60" width="80" height="100" rx="4" fill="none" stroke="#00994c" stroke-width="2.5" />
+  
+  <!-- Receipt lines -->
+  <line x1="70" y1="85" x2="130" y2="85" stroke="#00994c" stroke-width="2" />
+  <line x1="70" y1="115" x2="130" y2="115" stroke="#00994c" stroke-width="2" />
+  <line x1="70" y1="145" x2="110" y2="145" stroke="#00994c" stroke-width="2" />
+  
+  <!-- Dollar sign -->
+  <text x="130" y="140" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#00994c">$</text>
+  
+  <!-- "EERIS" text in the center -->
+  <text x="100" y="60" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#00994c" text-anchor="middle">EERIS</text>
+  
+  <!-- Checkmark -->
+  <path d="M 80,130 L 90,140 L 110,120" fill="none" stroke="#00994c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

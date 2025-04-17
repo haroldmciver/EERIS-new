@@ -151,7 +151,7 @@ const ViewReceiptModal = ({ open, onClose, receipt, onEdit, userRole, onStatusCh
             ))}
           </List>
 
-          {userRole === 'supervisor' && receipt.status === 'submitted' && (
+          {userRole === 'admin' && receipt.status === 'submitted' && (
             <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
               <Button
                 variant="contained"

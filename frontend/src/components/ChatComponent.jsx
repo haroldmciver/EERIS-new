@@ -14,9 +14,87 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip as ChartTooltip, Legend } from 'chart.js';
+
+// Register ChartJS components
+ChartJS.register(ArcElement, ChartTooltip, Legend);
+
+const ExpensePieChart = ({ receipts }) => {
+  // Calculate total spending by category
+  const categoryTotals = receipts.reduce((acc, receipt) => {
+    const category = receipt.expense_category || 'uncategorized';
+    // Remove $ and convert to number
+    const amount = parseFloat((receipt.total_payment || '0').replace(/[^0-9.-]+/g, ''));
+    acc[category] = (acc[category] || 0) + amount;
+    return acc;
+  }, {});
+
+  // Format numbers for display
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  };
+
+  // Prepare data for the pie chart
+  const data = {
+    labels: Object.keys(categoryTotals).map(category => 
+      `${category} (${formatCurrency(categoryTotals[category])})`
+    ),
+    datasets: [
+      {
+        data: Object.values(categoryTotals),
+        backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+          '#9966FF',
+          '#FF9F40',
+          '#FF6384',
+          '#36A2EB',
+        ],
+        borderColor: '#fff',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'right',
+      },
+      title: {
+        display: true,
+        text: 'Expense Categories by Total Amount',
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const label = context.label || '';
+            const value = context.raw || 0;
+            return `${label}: ${formatCurrency(value)}`;
+          }
+        }
+      }
+    },
+  };
+
+  return (
+    <Box sx={{ height: '200px', width: '100%', mb: 2 }}>
+      <Pie data={data} options={options} />
+    </Box>
+  );
+};
 
 const ChatComponent = () => {
   const [message, setMessage] = useState('');
+  const [receipts, setReceipts] = useState([]);
   const username = sessionStorage.getItem('username');
   const chatHistoryKey = `chatHistory_${username}`;
   
@@ -28,6 +106,19 @@ const ChatComponent = () => {
   
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef(null);
+
+  // Fetch receipts when component mounts
+  useEffect(() => {
+    const fetchReceipts = async () => {
+      try {
+        const response = await axios.get('/my_receipts');
+        setReceipts(response.data);
+      } catch (error) {
+        console.error('Error fetching receipts:', error);
+      }
+    };
+    fetchReceipts();
+  }, []);
 
   // Clear chat history if stored for a different user
   useEffect(() => {
@@ -67,13 +158,14 @@ const ChatComponent = () => {
         .slice(-10)  // Get last 10 messages
         .map(msg => ({
           role: msg.sender === 'user' ? 'user' : 'assistant',
-          content: msg.text
+          content: msg.sender === 'user' ? `[User: ${username}] ${msg.text}` : msg.text
         }));
       
-      // Send message and conversation history to backend
+      // Send message and conversation history to backend, including the current user
       const response = await axios.post('/chat', { 
         message: userQuery,
-        conversation_history: conversationContext
+        conversation_history: conversationContext,
+        current_user: username  // Add the current user's username
       });
       
       // Add assistant response to chat
@@ -126,15 +218,24 @@ const ChatComponent = () => {
           Receipt Data Assistant
         </Typography>
         <Tooltip title="Clear chat history">
-          <IconButton 
-            size="small" 
-            onClick={clearChatHistory}
-            disabled={chatHistory.length === 0}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
+          <span>
+            <IconButton 
+              size="small" 
+              onClick={clearChatHistory}
+              disabled={chatHistory.length === 0}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </span>
         </Tooltip>
       </Box>
+      
+      {/* Pie Chart Section */}
+      {receipts.length > 0 && (
+        <Paper elevation={0} sx={{ mb: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+          <ExpensePieChart receipts={receipts} />
+        </Paper>
+      )}
       
       <Paper 
         elevation={0} 
@@ -146,7 +247,8 @@ const ChatComponent = () => {
           mb: 2,
           p: 2,
           borderRadius: 1,
-          overflow: 'hidden'
+          overflow: 'hidden',
+          height: '50%' // Reduce chat height to make room for pie chart
         }}
       >
         <List sx={{ 
