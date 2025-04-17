@@ -30,7 +30,7 @@
         "line_items": [
           "Pink Huggable Bear Plushie"
         ],
-        "total_payment": "200.68",
+        "total_payment": "200.69",
         "payment_method": "cash",
         "expense_category": "meals",
         "image_filename": "5b72ccff-2e9a-4ee5-a033-7de5e3f504f7.png",
@@ -76,7 +76,7 @@
         "payment_method": "VISA CREDIT (Contactless)",
         "expense_category": "office supplies",
         "image_filename": "8afe22c1-0278-48cf-9a0e-5e52b9de3b0d.pdf",
-        "status": "submitted",
+        "status": "approved",
         "processed_at": "2025-02-12T19:06:33.617970"
       },
       {
@@ -93,7 +93,7 @@
         "payment_method": "Visa",
         "expense_category": "entertainment",
         "image_filename": "fb74a93b-4c22-42e3-86d4-9acfd21d545f.png",
-        "status": "submitted",
+        "status": "rejected",
         "processed_at": "2025-02-12T22:15:56.971500"
       },
       {
@@ -249,7 +249,7 @@
         "status": "denied"
       }
     ],
-    "supervisor": [
+    "admin": [
       {
         "store_name": "Apple Short Pump Town Center",
         "phone": "804-420-3000",
@@ -325,6 +325,65 @@
         "image_filename": "12be8a70-3904-4ad1-a414-e555934597b4.png",
         "status": "approved",
         "processed_at": "2025-02-12T22:07:01.885721"
+      }
+    ],
+    "dinh": [
+      {
+        "address": "6332 Business Drive, Suite 528, Palo Alto California 94301",
+        "date": "2017-04-07",
+        "expense_category": "meals",
+        "image_filename": "36948784-e1f2-42ef-9cdd-81854fef6604.png",
+        "line_items": [
+          "Sub Total USD$ 25.23"
+        ],
+        "payment_method": "CREDIT",
+        "phone": "575-1628095",
+        "store_name": "Main Street Restaurant",
+        "time": "11:36",
+        "total_payment": "$29.01",
+        "website": "",
+        "processed_at": "2025-04-17T15:09:12.648461",
+        "status": "approved"
+      }
+    ],
+    "supervisor": [
+      {
+        "address": "",
+        "date": "2025-01-15",
+        "expense_category": "meals",
+        "image_filename": "97a9f6f7-a473-4511-bd79-813410cb70db.png",
+        "line_items": [
+          "#20 Elite Chicken Bacon Ranch 12\"",
+          "Artisan Italian Bread",
+          "Toasted"
+        ],
+        "payment_method": "Credit Card",
+        "phone": "",
+        "store_name": "Subway",
+        "time": "13:41",
+        "total_payment": "$12.77",
+        "website": "",
+        "processed_at": "2025-04-17T15:13:35.239768",
+        "status": "approved"
+      }
+    ],
+    "jordan": [
+      {
+        "address": "",
+        "date": "2025-02-02",
+        "expense_category": "entertainment",
+        "image_filename": "6a50b4ca-8634-4caf-91dd-86abba4afbe8.png",
+        "line_items": [
+          "Pink Huggable Bear Plushie x 1"
+        ],
+        "payment_method": "",
+        "phone": "37024694408",
+        "store_name": "BATTLE BEARS",
+        "time": "18:51",
+        "total_payment": "$200.00",
+        "website": "",
+        "processed_at": "2025-04-17T15:16:58.152983",
+        "status": "approved"
       }
     ]
   }

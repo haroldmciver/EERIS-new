@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [receipts, setReceipts] = useState([]);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isSupervisor, setIsSupervisor] = useState(false);
   const navigate = useNavigate();
   const username = sessionStorage.getItem('username');
@@ -33,7 +34,9 @@ const Dashboard = () => {
   const checkRole = async () => {
     try {
       const response = await axios.get('/check_role');
-      setIsSupervisor(response.data.role === 'supervisor');
+      const role = response.data.role;
+      setIsAdmin(role === 'admin');
+      setIsSupervisor(role === 'supervisor');
     } catch (error) {
       console.error('Error checking role:', error);
     }
@@ -79,6 +82,30 @@ const Dashboard = () => {
     }
   };
 
+  const handleGenerateReport = async () => {
+    try {
+      const response = await axios.get('/generate_team_report', {
+        responseType: 'blob'
+      });
+      
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      
+      // Create a link element and trigger download
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `team_report_${new Date().toISOString().split('T')[0]}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating report:', error);
+    }
+  };
+
   return (
     <Box sx={{ 
       display: 'flex', 
@@ -116,7 +143,7 @@ const Dashboard = () => {
             variant="body2" 
             sx={{ 
               mr: 2,
-              bgcolor: isSupervisor ? '#f50057' : '#2e7d32',
+              bgcolor: isAdmin ? '#f50057' : (isSupervisor ? '#1976d2' : '#2e7d32'),
               color: 'white',
               px: 1.5,
               py: 0.5,
@@ -124,7 +151,7 @@ const Dashboard = () => {
               fontWeight: 'medium'
             }}
           >
-            Role: {isSupervisor ? 'Supervisor' : 'User'}
+            Role: {isAdmin ? 'Admin' : (isSupervisor ? 'Supervisor' : 'User')}
           </Typography>
           <Button color="inherit" onClick={handleLogout}>Logout</Button>
         </Toolbar>
@@ -149,6 +176,20 @@ const Dashboard = () => {
           <Typography variant="h5">
             Receipts Dashboard
           </Typography>
+          {isSupervisor && (
+            <Button
+              variant="contained"
+              onClick={handleGenerateReport}
+              sx={{
+                bgcolor: '#64b5f6',
+                '&:hover': {
+                  bgcolor: '#42a5f5',
+                }
+              }}
+            >
+              Generate Team Report
+            </Button>
+          )}
         </Box>
 
         <Box sx={{ 
@@ -156,7 +197,7 @@ const Dashboard = () => {
           gap: 4,
           flexGrow: 1,
           width: '100%',
-          height: 'calc(100vh - 200px)'  // Set a fixed height that works well on most screens
+          height: 'calc(100vh - 200px)'
         }}>
           {/* Left container - Receipts Table (66%) */}
           <Box sx={{ 
@@ -171,6 +212,7 @@ const Dashboard = () => {
           }}>
             <ReceiptsTable
               receipts={receipts}
+              isAdmin={isAdmin}
               isSupervisor={isSupervisor}
               onViewReceipt={handleViewReceipt}
               onEditReceipt={handleEditReceipt}
@@ -207,7 +249,7 @@ const Dashboard = () => {
             setViewModalOpen(false);
             setEditModalOpen(true);
           }}
-          userRole={isSupervisor ? 'supervisor' : 'employee'}
+          userRole={isAdmin ? 'admin' : 'employee'}
           onStatusChange={handleUpdateStatus}
         />
 

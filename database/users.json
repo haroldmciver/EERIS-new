@@ -3,22 +3,47 @@
     "harold": {
       "password": "123",
       "created_at": "2025-02-11T23:37:47.397622",
-      "role": "user"
+      "role": "user",
+      "team": []
     },
     "nathan": {
       "password": "123",
       "created_at": "2025-02-12T11:00:10.638246",
       "role": "user"
     },
-    "supervisor": {
+    "admin": {
       "password": "123",
       "created_at": "2025-02-12T12:00:00.000000",
-      "role": "supervisor"
+      "role": "admin"
     },
     "aditi": {
       "password": "123",
       "created_at": "2025-02-12T16:25:54.988346",
-      "role": "supervisor"
+      "role": "admin",
+      "team": []
+    },
+    "supervisor": {
+      "password": "123",
+      "created_at": "2025-04-17T14:53:23.337776",
+      "role": "supervisor",
+      "team": [
+        "nathan"
+      ]
+    },
+    "dinh": {
+      "password": "123",
+      "created_at": "2025-04-17T15:08:46.695261",
+      "role": "user",
+      "team": []
+    },
+    "jordan": {
+      "password": "123",
+      "created_at": "2025-04-17T15:15:05.114521",
+      "role": "supervisor",
+      "team": [
+        "dinh",
+        "nathan"
+      ]
     }
   }
 }

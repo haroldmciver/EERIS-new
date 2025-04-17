@@ -1,36 +1,79 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Box,
-  ButtonGroup
+  ButtonGroup,
+  Chip,
+  Typography
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import RoleChangeModal from './RoleChangeModal';
 
-const ReceiptsTable = ({ receipts, isSupervisor, onViewReceipt, onEditReceipt, onUpdateStatus }) => {
+const ReceiptsTable = ({ receipts, isAdmin, isSupervisor, onViewReceipt, onEditReceipt, onUpdateStatus }) => {
+  const [roleChangeModal, setRoleChangeModal] = useState({
+    open: false,
+    username: '',
+    currentRole: ''
+  });
+
+  const handleUsernameClick = (username) => {
+    if (isAdmin) {
+      // Find the user's current role
+      const userReceipt = receipts.find(r => r.username === username);
+      setRoleChangeModal({
+        open: true,
+        username,
+        currentRole: userReceipt?.role || 'user'
+      });
+    }
+  };
+
+  const handleRoleChangeClose = (success) => {
+    setRoleChangeModal({ ...roleChangeModal, open: false });
+    if (success) {
+      // Refresh the receipts to show updated roles
+      window.location.reload();
+    }
+  };
+
   const getStatusActions = (params) => {
-    if (isSupervisor && params.row.status === 'submitted') {
+    const status = params.row.status || 'submitted';
+    const statusColor = {
+      'submitted': 'warning',
+      'approved': 'success',
+      'rejected': 'error'
+    };
+
+    // For admins and supervisors, show only buttons for submitted status
+    if ((isAdmin || isSupervisor) && status === 'submitted') {
       return (
         <ButtonGroup size="small">
           <Button
-            onClick={() => onUpdateStatus(params.row.username, params.row.processed_at, 'approved')}
-            color="primary"
             variant="contained"
-            size="small"
+            color="success"
+            onClick={() => onUpdateStatus(params.row.username, params.row.processed_at, 'approved')}
           >
             Approve
           </Button>
           <Button
-            onClick={() => onUpdateStatus(params.row.username, params.row.processed_at, 'denied')}
-            color="error"
             variant="contained"
-            size="small"
+            color="error"
+            onClick={() => onUpdateStatus(params.row.username, params.row.processed_at, 'rejected')}
           >
-            Deny
+            Reject
           </Button>
         </ButtonGroup>
       );
     }
-    return params.value;
+
+    // For all other cases, show the status chip
+    return (
+      <Chip
+        label={status.charAt(0).toUpperCase() + status.slice(1)}
+        color={statusColor[status] || 'default'}
+        size="small"
+      />
+    );
   };
 
   const columns = [
@@ -63,7 +106,7 @@ const ReceiptsTable = ({ receipts, isSupervisor, onViewReceipt, onEditReceipt, o
         </ButtonGroup>
       ),
     },
-    ...(isSupervisor ? [{
+    ...(isAdmin || isSupervisor ? [{
       field: 'username',
       headerName: 'User',
       flex: 0.8,
@@ -71,6 +114,20 @@ const ReceiptsTable = ({ receipts, isSupervisor, onViewReceipt, onEditReceipt, o
       align: 'center',
       sortable: true,
       resizable: false,
+      renderCell: (params) => (
+        <Typography
+          onClick={() => handleUsernameClick(params.value)}
+          sx={{
+            cursor: isAdmin ? 'pointer' : 'default',
+            color: isAdmin ? 'primary.main' : 'text.primary',
+            '&:hover': {
+              textDecoration: isAdmin ? 'underline' : 'none'
+            }
+          }}
+        >
+          {params.value}
+        </Typography>
+      ),
     }] : []),
     { 
       field: 'store_name', 
@@ -143,51 +200,59 @@ const ReceiptsTable = ({ receipts, isSupervisor, onViewReceipt, onEditReceipt, o
   ];
 
   return (
-    <Box sx={{ 
-      height: '100%', 
-      width: '100%',
-      '& .MuiDataGrid-root': {
-        backgroundColor: 'white',
-      },
-    }}>
-      <DataGrid
-        rows={receipts.map((receipt, index) => ({
-          ...receipt,
-          id: receipt.processed_at || index,
-        }))}
-        columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[10, 25, 50, 100]}
-        disableSelectionOnClick
-        disableColumnMenu
-        disableColumnFilter
-        autoHeight
-        sx={{
-          '& .MuiDataGrid-cell': {
-            fontSize: '0.875rem',
-            padding: '8px',
-            whiteSpace: 'normal',
-            minHeight: '52px !important',
-          },
-          '& .MuiDataGrid-columnHeaders': {
-            backgroundColor: '#f5f5f5',
-            borderBottom: '2px solid #e0e0e0',
-          },
-          '& .MuiDataGrid-row': {
-            minHeight: '52px !important',
-          },
-          '& .MuiDataGrid-row:hover': {
-            backgroundColor: '#f8f8f8',
-          },
-          '& .MuiDataGrid-columnSeparator': {
-            display: 'none',
-          },
-          '& .MuiDataGrid-cell--withRenderer': {
-            padding: '4px',
-          },
-        }}
+    <>
+      <Box sx={{ 
+        height: '100%', 
+        width: '100%',
+        '& .MuiDataGrid-root': {
+          backgroundColor: 'white',
+        },
+      }}>
+        <DataGrid
+          rows={receipts.map((receipt, index) => ({
+            ...receipt,
+            id: receipt.processed_at || index,
+          }))}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          disableSelectionOnClick
+          disableColumnMenu
+          disableColumnFilter
+          autoHeight
+          sx={{
+            '& .MuiDataGrid-cell': {
+              fontSize: '0.875rem',
+              padding: '8px',
+              whiteSpace: 'normal',
+              minHeight: '52px !important',
+            },
+            '& .MuiDataGrid-columnHeaders': {
+              backgroundColor: '#f5f5f5',
+              borderBottom: '2px solid #e0e0e0',
+            },
+            '& .MuiDataGrid-row': {
+              minHeight: '52px !important',
+            },
+            '& .MuiDataGrid-row:hover': {
+              backgroundColor: '#f8f8f8',
+            },
+            '& .MuiDataGrid-columnSeparator': {
+              display: 'none',
+            },
+            '& .MuiDataGrid-cell--withRenderer': {
+              padding: '4px',
+            },
+          }}
+        />
+      </Box>
+      <RoleChangeModal
+        open={roleChangeModal.open}
+        onClose={handleRoleChangeClose}
+        username={roleChangeModal.username}
+        currentRole={roleChangeModal.currentRole}
       />
-    </Box>
+    </>
   );
 };
 
