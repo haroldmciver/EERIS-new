@@ -3,6 +3,7 @@
 ## Overview
 
 EERIS is a web application that allows users to upload receipts and have them processed by an AI.
+this was for a school project lol
 
 ## How to run
 
